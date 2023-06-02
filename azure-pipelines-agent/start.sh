@@ -25,6 +25,11 @@ fi
 export AGENT_ALLOW_RUNASROOT="1"
 
 cleanup() {
+  # If $AZP_PLACEHOLDER is set, skip cleanup
+  if [ -n "$AZP_PLACEHOLDER" ]; then
+    echo 'Running in placeholder mode, skipping cleanup'
+    return
+  fi
   if [ -e config.sh ]; then
     print_header "Cleanup. Removing Azure Pipelines agent..."
 
@@ -94,11 +99,11 @@ trap 'cleanup; exit 143' TERM
 chmod +x ./run.sh
 
 
-  # If $AZP_PLACEHOLDER is set, skipping running the agent
-  if [ -n "$AZP_PLACEHOLDER" ]; then
-    echo 'Running in placeholder mode, skipping running the agent'
-  else
-    # To be aware of TERM and INT signals call run.sh
-    # Running it with the --once flag at the end will shut down the agent after the build is executed
-    ./run.sh --once & wait $!
-  fi
+# If $AZP_PLACEHOLDER is set, skipping running the agent
+if [ -n "$AZP_PLACEHOLDER" ]; then
+  echo 'Running in placeholder mode, skipping running the agent'
+else
+  # To be aware of TERM and INT signals call run.sh
+  # Running it with the --once flag at the end will shut down the agent after the build is executed
+  ./run.sh --once & wait $!
+fi
