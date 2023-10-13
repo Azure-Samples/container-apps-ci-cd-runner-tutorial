@@ -13,7 +13,7 @@ if [ -z "$AZP_TOKEN_FILE" ]; then
   fi
 
   AZP_TOKEN_FILE=/azp/.token
-  echo -n $AZP_TOKEN > "$AZP_TOKEN_FILE"
+  echo -n "$AZP_TOKEN" > "$AZP_TOKEN_FILE"
 fi
 
 unset AZP_TOKEN
@@ -70,7 +70,7 @@ fi
 
 print_header "2. Downloading and extracting Azure Pipelines agent..."
 echo "Agent package URL: $AZP_AGENT_PACKAGE_LATEST_URL"
-curl -LsS $AZP_AGENT_PACKAGE_LATEST_URL | tar -xz & wait $!
+curl -LsS "$AZP_AGENT_PACKAGE_LATEST_URL" | tar -xz & wait $!
 
 source ./env.sh
 
